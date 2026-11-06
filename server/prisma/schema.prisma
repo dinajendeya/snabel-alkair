@@ -1,0 +1,154 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  BENEFICIARY
+  VOLUNTEER
+  ADMIN
+}
+
+enum ProjectStatus {
+  RUNNING
+  PAUSED
+  COMPLETED
+}
+
+enum ProjectCategory {
+  FOOD
+  EDUCATION
+  CLOTHING
+  WATER
+  SHELTER
+  HEALTH
+  ORPHAN_SUPPORT
+  TRAINING
+  ECONOMIC_SUPPORT
+}
+
+enum ApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id             String @id @default(uuid())
+
+  email          String @unique
+  passwordHash   String
+
+  firstName      String
+  lastName       String
+
+  phone          String
+
+  birthDate      DateTime?
+  governorate    String?
+  address        String?
+  bio            String?
+
+  role           UserRole
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  applications   Application[]
+  notifications  Notification[]
+  auditLogs      AuditLog[]
+}
+
+model Project {
+  id                  String @id @default(uuid())
+
+  title               String
+  slug                String @unique
+
+  shortDescription    String
+  description         String
+
+  objectives          String?
+  eligibility         String?
+  requirements        String?
+
+  imageUrl            String?
+
+  category            ProjectCategory
+  status              ProjectStatus
+
+  targetBeneficiaries Int?
+  targetVolunteers    Int?
+
+  createdById         String?
+  updatedById         String?
+
+  startDate           DateTime?
+  endDate             DateTime?
+
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  applications        Application[]
+}
+
+model Application {
+  id            String @id @default(uuid())
+
+  userId        String
+  projectId     String
+
+  motivation    String
+  notes         String?
+
+  status        ApplicationStatus @default(PENDING)
+
+  reviewedBy    String?
+  reviewedAt    DateTime?
+
+  adminNotes    String?
+
+  createdAt     DateTime @default(now())
+
+  user          User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project       Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, projectId])
+}
+
+model Notification {
+  id          String @id @default(uuid())
+
+  userId      String
+
+  title       String
+  message     String
+
+  isRead      Boolean @default(false)
+
+  createdAt   DateTime @default(now())
+
+  user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id            String @id @default(uuid())
+
+  actorId       String
+
+  action        String
+
+  entityType    String
+  entityId      String
+
+  description   String?
+
+  createdAt     DateTime @default(now())
+
+  actor         User @relation(fields: [actorId], references: [id], onDelete: Cascade)
+}
+
