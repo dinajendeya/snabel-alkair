@@ -1,175 +1,1027 @@
-# 🌿 Senabil Community Impact Platform
-### Full-Stack Humanitarian Aid & Volunteer Management Platform for Gaza Relief NGOs
+# 🌱 Senabil Community Impact Platform
+
+A full-stack humanitarian aid management platform designed for NGOs and nonprofit organizations to manage beneficiaries, volunteers, projects, applications, notifications, reporting, and operational workflows.
 
 ---
 
-## 📖 Project Overview
+## 📋 Table of Contents
 
-**Senabil Community Impact Platform** is a full-stack humanitarian aid management solution tailored for NGOs and non-profit organizations operating in crisis zones and vulnerable communities across the Gaza Strip.
-
-The platform streamlines:
-- **Beneficiary Management**: Secure intake and dignified tracking of displaced families in need of food, water, winter aid, shelter, orphan care, and healthcare.
-- **Volunteer Mobilization**: Registration and deployment of educators, engineers, medics, and field logistics volunteers.
-- **Project Lifecycle Management**: Full control over publishing, pausing, resuming, completing, and auditing humanitarian projects.
-- **Project Enrollment & Review Workflows**: Automated application submission, email dispatch, notification generation, and audit logging.
-- **Administrative Command Center**: Comprehensive metrics, project drawers, applicant review with approval/rejection notes, and immutable audit logs.
-- **Real-Time Dynamic Statistics**: Live counters calculated directly from verified database records (no static statistics table).
-
----
-
-## 🏗️ Technology Stack
-
-- **Backend**: Node.js, Express, TypeScript
-- **Database & ORM**: PostgreSQL, Prisma ORM
-- **Authentication**: JWT, bcryptjs, Role-Based Access Control (RBAC)
-- **Frontend**: React 18, TypeScript, Vite, Tailwind CSS, Lucide Icons
-- **Event-Driven Workflows**: Automatic welcome notifications, email generation & tracking, and audit trail logging on every business event.
+- [Overview](#overview)
+- [Features](#features)
+- [Technology Stack](#technology-stack)
+- [System Architecture](#system-architecture)
+- [User Roles](#user-roles)
+- [Core Workflows](#core-workflows)
+- [Backend Structure](#backend-structure)
+- [Database Schema](#database-schema)
+- [API Endpoints](#api-endpoints)
+- [Security Features](#security-features)
+- [Getting Started](#getting-started)
+- [Environment Variables](#environment-variables)
+- [Database Setup](#database-setup)
+- [Running The Application](#running-the-application)
+- [Future Improvements](#future-improvements)
 
 ---
 
-## 👥 Three Core User Roles
+# Overview
 
-| Role | Description | Examples |
-|---|---|---|
-| **BENEFICIARY** | Individuals and families seeking humanitarian support | Food Support, Education Support, Winter Aid, Water Support, Shelter, Orphan Care, Medical Assistance |
-| **VOLUNTEER** | Community members contributing professional skills or time | Teacher, Software Developer, Field Logistics, Social Worker, Translator, Medic |
-| **ADMIN** | Full organizational and system governance | Manage Users, Manage Projects, Review Applications, Approve/Reject, Audit Logs, Real-Time Analytics |
+Senabil Community Impact Platform is a comprehensive NGO management system that enables organizations to digitize humanitarian operations and improve transparency, accountability, and reporting.
+
+The platform allows organizations to:
+
+- Manage beneficiaries
+- Manage volunteers
+- Publish projects
+- Accept applications
+- Review and approve/reject applications
+- Send automated notifications
+- Track project participation
+- Generate statistics and reports
+- Maintain audit logs
+- Manage activities through a centralized admin dashboard
 
 ---
 
-## 🚀 Unified Registration & Application Flow
+# Features
 
+## Public Features
+
+- Homepage
+- Projects Directory
+- Project Details
+- Registration & Authentication
+- Profile Management
+
+## Beneficiary Features
+
+- Browse projects
+- Apply for assistance programs
+- Track application status
+- Receive notifications
+- Manage profile
+
+## Volunteer Features
+
+- Browse volunteer opportunities
+- Apply to projects
+- Track participation
+- Receive notifications
+- Manage profile
+
+## Admin Features
+
+- Manage projects
+- Manage beneficiaries
+- Manage volunteers
+- Review applications
+- Approve/reject submissions
+- View analytics
+- View audit logs
+- Manage notifications
+
+---
+
+# Technology Stack
+
+## Frontend
+
+```text
+React
+TypeScript
+React Router
+Axios
+React Context API
+Tailwind CSS
 ```
-Authentication Gateway (/auth)
-      ↓
-Login OR Register (/choose-role)
-      ↓
-Select Role (Beneficiary or Volunteer)
-      ↓
-Registration Form (/register)
-      ↓
-Create User in PostgreSQL
-      ↓
-Create Welcome In-App Notification
-      ↓
-Generate Welcome Email
-      ↓
-Create Immutable Audit Log (USER_REGISTERED)
-      ↓
-Auto-Login (JWT Token Issued)
-      ↓
-Return Automatically to Destination (e.g. Project Application Form)
-```
 
-### Application Submission & Review Flow:
-```
-User Submits Application
-      ↓
-Validate Request (Must be RUNNING, Single Active Application per Project)
-      ↓
-Create Application (PENDING)
-      ↓
-Create Notification & Dispatch Confirmation Email
-      ↓
-Create Audit Log (APPLICATION_SUBMITTED)
-      ↓
-Appears in Admin Dashboard (/admin)
-      ↓
-Admin Reviews Application (Approve / Reject + Committee Notes)
-      ↓
-Update Application Status & User Profile Status
-      ↓
-Dispatch Decision Email & In-App Notification (APPLICATION_APPROVED / APPLICATION_REJECTED)
-      ↓
-Create Audit Log (APPLICATION_APPROVED / APPLICATION_REJECTED)
+### Frontend Architecture
+
+```text
+Component-Based Architecture
++
+Page-Based Routing
++
+React Context State Management
 ```
 
 ---
 
-## 🔑 Default Test Accounts (Pre-Seeded)
+## Backend
 
-| Role | Email | Password | Details |
-|---|---|---|---|
-| **👑 Admin** | `admin@senabil.org` | `admin123` | Executive Director of Humanitarian Operations |
-| **🤝 Volunteer** | `tariq.volunteer@senabil.org` | `volunteer123` | STEM Educator in camp learning tents (Gaza City) |
-| **🤝 Volunteer** | `nour.volunteer@senabil.org` | `volunteer123` | Software Developer mentoring youth (Khan Younis) |
-| **🤲 Beneficiary** | `ahmed.beneficiary@gmail.com` | `beneficiary123` | Displaced family head (Deir al-Balah) |
-| **🤲 Beneficiary** | `fatima.beneficiary@gmail.com` | `beneficiary123` | Caregiver of four orphaned children (Jabalia) |
+```text
+Node.js
+Express.js
+TypeScript
+Prisma ORM
+PostgreSQL
+JWT Authentication
+Zod Validation
+```
 
-*(Note: The login screen also features 1-click demo buttons to automatically populate any of these test credentials!)*
+### Backend Architecture
 
----
+```text
+MVC + Service Layer
+```
 
-## 📡 API Endpoints Reference
+Application flow:
 
-### 1. Authentication
-- `POST /api/auth/register` - Register new Beneficiary or Volunteer
-- `POST /api/auth/login` - Authenticate user & issue JWT
-- `POST /api/auth/logout` - Invalidate session & log audit event
-- `POST /api/auth/forgot-password` - Request password recovery
-- `POST /api/auth/reset-password` - Update password
-
-### 2. User Profile
-- `GET /api/users/me` - Current authenticated profile
-- `PATCH /api/users/me` - Update profile information
-- `GET /api/users/me/applications` - List applications submitted by current user
-- `PATCH /api/users/me/password` - Change account password
-
-### 3. Projects
-- `GET /api/projects` - Filter projects by search, category, or status
-- `GET /api/projects/featured` - Latest running projects for homepage
-- `GET /api/projects/:id` - Project details, objectives, criteria & live stats
-- `POST /api/projects` - Admin: Create new project
-- `PATCH /api/projects/:id` - Admin: Edit project specifications
-- `DELETE /api/projects/:id` - Admin: Remove project
-- `PATCH /api/projects/:id/status` - Admin: Pause, Resume, or Complete project
-- `GET /api/projects/:id/analytics` - Admin: Detailed demographic breakdown
-
-### 4. Applications
-- `POST /api/applications` - Submit application with motivation statement
-- `GET /api/applications/me` - Current user's application history
-- `GET /api/applications` - Admin: Filtered list of applications
-- `PATCH /api/applications/:id/review` - Admin: Approve or Reject application
-
-### 5. Notifications
-- `GET /api/notifications` - Fetch user's in-app notifications
-- `PATCH /api/notifications/:id/read` - Mark single notification as read
-- `PATCH /api/notifications/read-all` - Mark all notifications as read
-
-### 6. Admin Dashboard
-- `GET /api/dashboard/overview` - Aggregate live stats, categories & recent events
-- `GET /api/dashboard/projects` - Projects table with beneficiary & volunteer counts
-- `GET /api/dashboard/beneficiaries` - Beneficiary roster & enrollment history
-- `GET /api/dashboard/volunteers` - Volunteer roster & deployment history
-- `GET /api/dashboard/applications` - Applications review table
-- `GET /api/dashboard/audit-logs` - Immutable system audit logs
-
-### 7. Public & Transparency
-- `GET /api/public/stats` - Live database-calculated metrics
-- `GET /api/public/email-history` - Email dispatch log for verification
+```text
+HTTP Request
+      ↓
+Route
+      ↓
+Controller
+      ↓
+Service
+      ↓
+Prisma ORM
+      ↓
+PostgreSQL
+```
 
 ---
 
-## 🛠️ How to Run Locally
+## Database
 
-### 1. Database Setup
-Ensure PostgreSQL is running locally on port `5432` with database `senabil_db`:
+```text
+PostgreSQL
+```
+
+Managed using:
+
+```text
+Prisma ORM
+```
+
+---
+
+# System Architecture
+
+## Backend Architecture
+
+The backend follows a layered architecture pattern.
+
+### Route Layer
+
+Responsible for:
+
+- Defining API endpoints
+- Applying middleware
+- Delegating requests to controllers
+
+### Controller Layer
+
+Responsible for:
+
+- Reading request data
+- Reading route parameters
+- Returning HTTP responses
+- Calling services
+
+### Service Layer
+
+Responsible for:
+
+- Business logic
+- Workflow orchestration
+- Notifications
+- Audit logging
+- Project processing
+
+### Prisma Layer
+
+Responsible for:
+
+- Database queries
+- ORM mapping
+- Data persistence
+
+### PostgreSQL
+
+Responsible for:
+
+- Permanent data storage
+
+---
+
+# User Roles
+
+## Beneficiary
+
+A person seeking support.
+
+Examples:
+
+```text
+Food Support
+Water Support
+Winter Aid
+Education Support
+Housing Assistance
+Medical Support
+```
+
+Permissions:
+
+```text
+Register
+Login
+Apply To Projects
+Receive Notifications
+Track Applications
+Manage Profile
+```
+
+---
+
+## Volunteer
+
+A person willing to contribute.
+
+Examples:
+
+```text
+Teacher
+Trainer
+Developer
+Translator
+Social Worker
+Field Volunteer
+```
+
+Permissions:
+
+```text
+Register
+Login
+Browse Projects
+Apply To Volunteer Opportunities
+Receive Notifications
+Manage Profile
+```
+
+---
+
+## Admin
+
+System administrator.
+
+Permissions:
+
+```text
+Manage Projects
+Manage Applications
+Manage Users
+Manage Volunteers
+Manage Beneficiaries
+Review Applications
+Access Analytics
+Access Reports
+Access Audit Logs
+```
+
+---
+
+# Core Workflows
+
+## Registration Workflow
+
+```text
+Registration
+↓
+Create User
+↓
+Create Welcome Notification
+↓
+Create Audit Log
+↓
+Auto Login
+```
+
+---
+
+## Project Application Workflow
+
+```text
+User Applies
+↓
+Validate Request
+↓
+Create Application
+↓
+Create Notification
+↓
+Send Confirmation Email
+↓
+Create Audit Log
+↓
+Appear In Dashboard
+```
+
+---
+
+## Application Review Workflow
+
+```text
+Admin Reviews Application
+↓
+Approve / Reject
+↓
+Update Status
+↓
+Create Notification
+↓
+Send Email
+↓
+Create Audit Log
+```
+
+---
+
+# Backend Structure
+
+```text
+server/
+│
+├── prisma/
+│   ├── schema.prisma
+│   ├── seed.ts
+│   └── migrations/
+│
+├── src/
+│
+│   ├── controllers/
+│   ├── services/
+│   ├── routes/
+│   ├── middleware/
+│   ├── validatorsa
+
+## UserRole
+
+```prisma
+enum UserRole {
+  BENEFICIARY
+  VOLUNTEER
+  ADMIN
+}
+```
+
+## ProjectStatus
+
+```prisma
+enum ProjectStatus {
+  RUNNING
+  PAUSED
+  COMPLETED
+}
+```
+
+## ApplicationStatus
+
+```prisma
+enum ApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+```
+
+## ProjectCategory
+
+```prisma
+enum ProjectCategory {
+  FOOD
+  EDUCATION
+  CLOTHING
+  WATER
+  SHELTER
+  HEALTH
+  ORPHAN_SUPPORT
+  TRAINING
+  ECONOMIC_SUPPORT
+}
+```
+
+### Core Models
+
+- User
+- Project
+- Application
+- Notification
+- AuditLog
+
+---
+# Database Schema
+
+## Enums
+
+### User Roles
+
+```prisma
+enum UserRole {
+  BENEFICIARY
+  VOLUNTEER
+  ADMIN
+}
+```
+
+### Project Status
+
+```prisma
+enum ProjectStatus {
+  RUNNING
+  PAUSED
+  COMPLETED
+}
+```
+
+### Application Status
+
+```prisma
+enum ApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+```
+
+### Project Categories
+
+```prisma
+enum ProjectCategory {
+  FOOD
+  EDUCATION
+  CLOTHING
+  WATER
+  SHELTER
+  HEALTH
+  ORPHAN_SUPPORT
+  TRAINING
+  ECONOMIC_SUPPORT
+}
+```
+
+---
+
+## User
+
+Stores all platform users including Beneficiaries, Volunteers, and Administrators.
+
+```prisma
+model User {
+  id             String @id @default(uuid())
+
+  email          String @unique
+  passwordHash   String
+
+  firstName      String
+  lastName       String
+
+  phone          String
+
+  birthDate      DateTime?
+  governorate    String?
+  address        String?
+  bio            String?
+
+  role           UserRole
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  applications   Application[]
+  notifications  Notification[]
+  auditLogs      AuditLog[]
+}
+```
+
+---
+
+## Project
+
+Stores all NGO initiatives and humanitarian projects.
+
+```prisma
+model Project {
+  id                  String @id @default(uuid())
+
+  title               String
+  slug                String @unique
+
+  shortDescription    String
+  description         String
+
+  objectives          String?
+  eligibility         String?
+  requirements        String?
+
+  imageUrl            String?
+
+  category            ProjectCategory
+  status              ProjectStatus
+
+  targetBeneficiaries Int?
+  targetVolunteers    Int?
+
+  createdById         String?
+  updatedById         String?
+
+  startDate           DateTime?
+  endDate             DateTime?
+
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  applications        Application[]
+}
+```
+
+---
+
+## Application
+
+Represents project applications submitted by beneficiaries or volunteers.
+
+```prisma
+model Application {
+  id            String @id @default(uuid())
+
+  userId        String
+  projectId     String
+
+  motivation    String
+  notes         String?
+
+  status        ApplicationStatus @default(PENDING)
+
+  reviewedBy    String?
+  reviewedAt    DateTime?
+
+  adminNotes    String?
+
+  createdAt     DateTime @default(now())
+
+  user          User @relation(
+                    fields: [userId],
+                    references: [id]
+                  )
+
+  project       Project @relation(
+                    fields: [projectId],
+                    references: [id]
+                  )
+
+  @@unique([userId, projectId])
+}
+```
+
+### Business Rules
+
+```text
+One user can apply only once per project.
+
+Application statuses:
+- PENDING
+- APPROVED
+- REJECTED
+```
+
+---
+
+## Notification
+
+Stores both system-generated and workflow-generated notifications.
+
+```prisma
+model Notification {
+  id          String @id @default(uuid())
+
+  userId      String
+
+  title       String
+  message     String
+
+  isRead      Boolean @default(false)
+
+  createdAt   DateTime @default(now())
+
+  user User @relation(
+    fields: [userId],
+    references: [id]
+  )
+}
+```
+
+### Example Notifications
+
+```text
+Welcome To Senabil
+
+Application Submitted
+
+Application Approved
+
+Application Rejected
+
+New Project Available
+```
+
+---
+
+## AuditLog
+
+Records important actions performed in the system for transparency and accountability.
+
+```prisma
+model AuditLog {
+  id            String @id @default(uuid())
+
+  actorId       String
+
+  action        String
+
+  entityType    String
+  entityId      String
+
+  description   String?
+
+  createdAt     DateTime @default(now())
+
+  actor User @relation(
+    fields: [actorId],
+    references: [id]
+  )
+}
+```
+
+### Example Audit Events
+
+```text
+USER_REGISTERED
+
+PROJECT_CREATED
+
+PROJECT_UPDATED
+
+PROJECT_PAUSED
+
+PROJECT_RESUMED
+
+PROJECT_COMPLETED
+
+PROJECT_DELETED
+
+APPLICATION_SUBMITTED
+
+APPLICATION_APPROVED
+
+APPLICATION_REJECTED
+
+PASSWORD_RESET
+```
+
+---
+
+# Entity Relationships
+
+```text
+User
+ │
+ ├── Applications (1:N)
+ │
+ ├── Notifications (1:N)
+ │
+ └── Audit Logs (1:N)
+
+Project
+ │
+ └── Applications (1:N)
+
+Application
+ │
+ ├── Belongs To User
+ │
+ └── Belongs To Project
+
+Notification
+ │
+ └── Belongs To User
+
+AuditLog
+ │
+ └── Belongs To User (Actor)
+```
+
+---
+
+# ERD Overview
+
+```text
+┌──────────────┐
+│     User     │
+└──────┬───────┘
+       │
+       │ 1
+       │
+       ▼
+┌──────────────┐
+│ Application  │
+└──────┬───────┘
+       │
+       │ N
+       │
+       ▼
+┌──────────────┐
+│   Project    │
+└──────────────┘
+
+
+┌──────────────┐
+│     User     │
+└──────┬───────┘
+       │
+       │ 1:N
+       ▼
+┌──────────────┐
+│ Notification │
+└──────────────┘
+
+
+┌──────────────┐
+│     User     │
+└──────┬───────┘
+       │
+       │ 1:N
+       ▼
+┌──────────────┐
+│   AuditLog   │
+└──────────────┘
+```
+
+--
+
+# API Endpoints
+
+## Authentication
+
+```http
+POST   /api/auth/register
+POST   /api/auth/login
+POST   /api/auth/logout
+POST   /api/auth/forgot-password
+POST   /api/auth/reset-password
+```
+
+---
+
+## User
+
+```http
+GET    /api/users/me
+PATCH  /api/users/me
+GET    /api/users/me/applications
+```
+
+---
+
+## Projects
+
+```http
+GET    /api/projects
+GET    /api/projects/featured
+GET    /api/projects/:id
+
+POST   /api/projects
+PATCH  /api/projects/:id
+DELETE /api/projects/:id
+
+PATCH  /api/projects/:id/status
+
+GET    /api/projects/:id/analytics
+```
+
+---
+
+## Applications
+
+```http
+POST   /api/applications
+
+GET    /api/applications/me
+
+GET    /api/applications
+
+PATCH  /api/applications/:id/review
+```
+
+---
+
+## Notifications
+
+```http
+GET    /api/notifications
+
+PATCH  /api/notifications/:id/read
+
+PATCH  /api/notifications/read-all
+```
+
+---
+
+## Dashboard
+
+```http
+GET /api/dashboard/overview
+
+GET /api/dashboard/projects
+
+GET /api/dashboard/beneficiaries
+
+GET /api/dashboard/volunteers
+
+GET /api/dashboard/applications
+
+GET /api/dashboard/audit-logs
+```
+
+---
+
+# Security Features
+
+Implemented security mechanisms:
+
+```text
+JWT Authentication
+
+Role-Based Access Control (RBAC)
+
+bcrypt Password Hashing
+
+Protected Routes
+
+Zod Validation
+
+Centralized Error Handling
+
+Authentication Middleware
+
+Authorization Middleware
+
+Prisma Type Safety
+```
+
+---
+
+# Getting Started
+
+## Clone The Repository
+
 ```bash
-# In server/
-npx prisma db push
-npx prisma db seed
+git clone https://github.com/yourusername/senabil-community-impact-platform.git
+
+cd senabil-community-impact-platform
 ```
 
-### 2. Start the Backend API
+---
+
+# Environment Variables
+
+## Backend (.env)
+
+```env
+DATABASE_URL="postgresql://postgres:password@localhost:5432/senabil_db"
+
+JWT_SECRET="your-secret-key"
+
+PORT=5000
+
+EMAIL_USER="your-email@gmail.com"
+
+EMAIL_PASS="your-app-password"
+```
+
+---
+
+## Frontend (.env)
+
+```env
+VITE_API_URL=http://localhost:5000/api
+```
+
+---
+
+# Database Setup
+
+Generate Prisma client:
+
+```bash
+npx prisma generate
+```
+
+Run migrations:
+
+```bash
+npx prisma migrate dev
+```
+
+Seed database:
+
+```bash
+npx ts-node prisma/seed.ts
+```
+
+Open Prisma Studio:
+
+```bash
+npx prisma studio
+```
+
+---
+
+# Running The Application
+
+## Backend
+
 ```bash
 cd server
+
+npm install
+
 npm run dev
-# Server starts on http://localhost:5000
 ```
 
-### 3. Start the Frontend Application
+Backend URL:
+
+```text
+http://localhost:5000
+```
+
+---
+
+## Frontend
+
 ```bash
 cd client
+
+npm install
+
 npm run dev
-# Client starts on http://localhost:5173
 ```
+
+Frontend URL:
+
+```text
+http://localhost:5173
+```
+
+---
+
+# Design Principles
+
+The project follows:
+
+```text
+MVC + Service Layer Architecture
+
+Component-Based React Architecture
+
+RESTful API Design
+
+Role-Based Authorization
+
+Reusable Components
+
+Centralized Business Logic
+
+Centralized Error Handling
+
+Scalable Database Design
+```
+
+---
+
+# Future Improvements
+
+```text
+File Uploads
+
+Advanced Analytics
+
+PDF Reports
+
+Project Media Gallery
+
+Multi-Language Support
+
+SMS Notifications
+
+Advanced Role Permissions
+
+Project Impact Reports
+
+Data Export Features
+```
+
+
