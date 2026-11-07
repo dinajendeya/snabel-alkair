@@ -1,0 +1,33 @@
+$kind: http-request
+name: Update My Profile
+order: 2000
+method: PATCH
+url: '{{baseUrl}}/api/users/me'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "firstName": "Ahmed",
+      "lastName": "Al-Hassan",
+      "phone": "059-7654321",
+      "governorate": "Khan Yunis",
+      "address": "Al-Amal District, Khan Yunis",
+      "bio": "Displaced family seeking food and education support for three children."
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status: 200 OK", () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Profile updated successfully", () => {
+        const res = pm.response.json();
+        pm.expect(res.success).to.be.true;
+        pm.expect(res.message).to.equal("Profile updated successfully");
+        pm.expect(res.user).to.have.property("id");
+      });

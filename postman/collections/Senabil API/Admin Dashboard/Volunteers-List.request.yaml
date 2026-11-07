@@ -1,0 +1,18 @@
+$kind: http-request
+name: Volunteers List
+order: 4000
+method: GET
+url: '{{baseUrl}}/api/dashboard/volunteers'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status: 200 OK", () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Volunteers list returned", () => {
+        const res = pm.response.json();
+        pm.expect(res.success).to.be.true;
+        pm.expect(res.volunteers).to.be.an("array");
+      });

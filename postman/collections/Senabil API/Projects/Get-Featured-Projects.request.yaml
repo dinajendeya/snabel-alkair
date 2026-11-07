@@ -1,0 +1,22 @@
+$kind: http-request
+name: Get Featured Projects
+order: 2000
+method: GET
+url: '{{baseUrl}}/api/projects/featured'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status: 200 OK", () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Featured projects returned (max 6, all RUNNING)", () => {
+        const res = pm.response.json();
+        pm.expect(res.success).to.be.true;
+        pm.expect(res.projects).to.be.an("array");
+        pm.expect(res.projects.length).to.be.at.most(6);
+        res.projects.forEach(p => {
+          pm.expect(p.status).to.equal("RUNNING");
+        });
+      });

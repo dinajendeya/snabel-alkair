@@ -1,0 +1,42 @@
+$kind: collection
+name: 'Senabil Community Impact Platform API'
+description: |-
+  # Senabil Community Impact Platform API
+
+  Complete REST API collection for the Senabil humanitarian aid and community impact platform.
+
+  ## Stack
+  Node.js · Express · TypeScript · PostgreSQL · Prisma ORM · JWT Auth
+
+  ## Base URL
+  Set {{baseUrl}} in your active environment (e.g., http://localhost:5000).
+
+  ## Authentication
+  JWT Bearer Token — automatically stored on login/register via afterResponse scripts.
+  All protected endpoints inherit auth from the collection root.
+
+  ## Roles & Access
+  | Role        | Access Level                                       |
+  |-------------|---------------------------------------------------|
+  | BENEFICIARY | Browse projects, submit and track applications     |
+  | VOLUNTEER   | Browse projects, submit and track applications     |
+  | ADMIN       | Full access: dashboard, project CRUD, reviews      |
+
+  ## Quick Start
+  1. Select the **development** environment
+  2. Run **Login** — token is auto-saved to {{token}}
+  3. Explore any folder
+
+  ## Folder Structure
+  - Authentication — Register, Login, Logout, Password Reset
+  - Users — Profile management, Password change
+  - Projects — Public browse + Admin CRUD
+  - Applications — Submit + Admin Review workflow
+  - Notifications — In-app notification management
+  - Admin Dashboard — Analytics, audit logs, user lists
+  - Public Endpoints — Live stats, email history
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{token}}'

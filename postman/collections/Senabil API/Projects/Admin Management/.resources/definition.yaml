@@ -1,0 +1,6 @@
+$kind: collection
+name: Admin Management
+description: |-
+  Admin-only project creation, editing, deletion, and analytics.
+  Requires ADMIN role — JWT token with role=ADMIN.
+order: 10000

@@ -1,0 +1,42 @@
+$kind: http-request
+name: Login
+order: 2000
+method: POST
+url: '{{baseUrl}}/api/auth/login'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "email": "ahmed.hassan@example.com",
+      "password": "Password123"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status: 200 OK", () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Login successful - JWT token received", () => {
+        pm.expect(res.success).to.be.true;
+        pm.expect(res.token).to.be.a("string").and.have.length.above(10);
+      });
+
+      pm.test("User object returned", () => {
+        pm.expect(res.user).to.have.all.keys(
+          "id", "email", "firstName", "lastName", "phone", "role", "createdAt"
+        );
+      });
+
+      if (res.success && res.token) {
+        pm.environment.set("token", res.token);
+        pm.environment.set("userId", res.user.id);
+        console.log("Token saved:", res.token.substring(0, 40) + "...");
+        console.log("Logged in as:", res.user.email, "| Role:", res.user.role);
+      }

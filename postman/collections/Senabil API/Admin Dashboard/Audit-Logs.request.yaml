@@ -1,0 +1,40 @@
+$kind: http-request
+name: Audit Logs
+order: 6000
+method: GET
+url: '{{baseUrl}}/api/dashboard/audit-logs?limit=50'
+queryParams:
+  - key: action
+    value: USER_LOGGED_IN
+    description: 'USER_REGISTERED | USER_LOGGED_IN | USER_LOGGED_OUT | USER_PROFILE_UPDATED | PASSWORD_CHANGED | PROJECT_CREATED | PROJECT_UPDATED | PROJECT_DELETED | APPLICATION_SUBMITTED | APPLICATION_REVIEWED'
+    disabled: true
+  - key: search
+    value: ''
+    description: 'Search by actor name or email'
+    disabled: true
+  - key: limit
+    value: '50'
+    description: 'Number of records (default: 100)'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status: 200 OK", () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Audit logs returned", () => {
+        const res = pm.response.json();
+        pm.expect(res.success).to.be.true;
+        pm.expect(res.logs).to.be.an("array");
+      });
+
+      pm.test("Audit log entries have required fields", () => {
+        const res = pm.response.json();
+        if (res.logs && res.logs.length > 0) {
+          const log = res.logs[0];
+          pm.expect(log).to.have.all.keys(
+            "id", "actorId", "action", "entityType", "entityId", "createdAt"
+          );
+        }
+      });

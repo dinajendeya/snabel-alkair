@@ -1,0 +1,28 @@
+$kind: http-request
+name: Live Statistics
+order: 1000
+method: GET
+url: '{{baseUrl}}/api/public/stats'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status: 200 OK", () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("All live stat fields returned", () => {
+        const res = pm.response.json();
+        pm.expect(res.success).to.be.true;
+        pm.expect(res.stats).to.have.all.keys(
+          "totalProjects",
+          "totalBeneficiaries",
+          "totalVolunteers",
+          "communitiesServed",
+          "totalApprovedApplications",
+          "totalRunningProjects"
+        );
+        Object.values(res.stats).forEach(v => {
+          pm.expect(v).to.be.a("number").and.be.at.least(0);
+        });
+      });

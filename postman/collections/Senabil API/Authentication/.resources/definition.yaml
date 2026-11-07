@@ -1,0 +1,23 @@
+$kind: collection
+name: Authentication
+description: |-
+  Public authentication endpoints. No token required except for Logout (optional).
+
+  Login and Register automatically extract the JWT token and save it
+  to the {{token}} environment variable via afterResponse scripts.
+
+  ## Endpoints
+  | Method | Route                        | Auth     | Description             |
+  |--------|------------------------------|----------|-------------------------|
+  | POST   | /api/auth/register           | None     | Create new account      |
+  | POST   | /api/auth/login              | None     | Login and receive token |
+  | POST   | /api/auth/logout             | Optional | Invalidate session      |
+  | POST   | /api/auth/forgot-password    | None     | Request password reset  |
+  | POST   | /api/auth/reset-password     | None     | Set new password        |
+
+  ## Token Automation
+  After a successful login or register, the JWT token is automatically
+  saved to pm.environment under the key "token".
+order: 1000
+auth:
+  type: noauth

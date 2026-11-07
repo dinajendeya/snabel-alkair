@@ -1,0 +1,26 @@
+$kind: http-request
+name: Get Project by ID
+order: 3000
+method: GET
+url: '{{baseUrl}}/api/projects/:id'
+pathVariables:
+  - key: id
+    value: '{{projectId}}'
+    description: 'Project UUID or slug'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status: 200 OK", () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Project object returned with full details", () => {
+        const res = pm.response.json();
+        pm.expect(res.success).to.be.true;
+        pm.expect(res.project).to.have.property("id");
+        pm.expect(res.project).to.have.property("title");
+        pm.expect(res.project).to.have.property("status");
+        pm.expect(res.project).to.have.property("category");
+        pm.expect(res.project).to.have.property("stats");
+      });

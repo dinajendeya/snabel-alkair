@@ -1,0 +1,17 @@
+$kind: collection
+name: Notifications
+description: |-
+  In-app notification management for authenticated users.
+
+  Notifications are auto-created by the system on these events:
+  - Registration → "Welcome to Senabil!" notification
+  - Application submitted → submission confirmation
+  - Application APPROVED/REJECTED → status update notification
+
+  ## Endpoints
+  | Method | Route                            | Description                          |
+  |--------|----------------------------------|--------------------------------------|
+  | GET    | /api/notifications               | Last 50 notifications + unread count |
+  | PATCH  | /api/notifications/:id/read      | Mark single notification as read     |
+  | PATCH  | /api/notifications/read-all      | Mark all notifications as read       |
+order: 5000

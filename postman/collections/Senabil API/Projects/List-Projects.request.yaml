@@ -1,0 +1,50 @@
+$kind: http-request
+name: List Projects
+order: 1000
+method: GET
+url: '{{baseUrl}}/api/projects'
+queryParams:
+  - key: search
+    value: food
+    description: 'Free-text search on title and short description'
+    disabled: true
+  - key: status
+    value: RUNNING
+    description: 'RUNNING | PAUSED | COMPLETED'
+    disabled: true
+  - key: category
+    value: FOOD
+    description: 'FOOD | EDUCATION | CLOTHING | WATER | SHELTER | HEALTH | ORPHAN_SUPPORT | TRAINING | ECONOMIC_SUPPORT'
+    disabled: true
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status: 200 OK", () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Projects list returned", () => {
+        const res = pm.response.json();
+        pm.expect(res.success).to.be.true;
+        pm.expect(res.projects).to.be.an("array");
+        pm.expect(res).to.have.property("count");
+      });
+
+      pm.test("Each project has required fields", () => {
+        const res = pm.response.json();
+        if (res.projects.length > 0) {
+          const p = res.projects[0];
+          pm.expect(p).to.have.all.keys(
+            "id", "title", "slug", "shortDescription", "description",
+            "category", "status", "stats", "createdAt"
+          );
+          pm.expect(p.stats).to.have.all.keys("totalApplications", "beneficiaries", "volunteers");
+        }
+      });
+
+      const res = pm.response.json();
+      if (res.projects && res.projects.length > 0) {
+        pm.environment.set("projectId", res.projects[0].id);
+        console.log("projectId saved:", res.projects[0].id);
+      }

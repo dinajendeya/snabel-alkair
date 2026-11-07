@@ -1,0 +1,27 @@
+$kind: http-request
+name: Get Notifications
+order: 1000
+method: GET
+url: '{{baseUrl}}/api/notifications'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status: 200 OK", () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Notifications returned with unread count", () => {
+        const res = pm.response.json();
+        pm.expect(res.success).to.be.true;
+        pm.expect(res.notifications).to.be.an("array");
+        pm.expect(res).to.have.property("unreadCount");
+        pm.expect(res.unreadCount).to.be.a("number");
+      });
+
+      const res = pm.response.json();
+      const unread = res.notifications && res.notifications.find(n => !n.isRead);
+      if (unread) {
+        pm.environment.set("notificationId", unread.id);
+        console.log("notificationId (unread) saved:", unread.id);
+      }

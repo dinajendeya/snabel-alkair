@@ -1,0 +1,19 @@
+$kind: http-request
+name: Email History
+order: 2000
+method: GET
+url: '{{baseUrl}}/api/public/email-history'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status: 200 OK", () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Email history returned", () => {
+        const res = pm.response.json();
+        pm.expect(res.success).to.be.true;
+        pm.expect(res.emails).to.be.an("array");
+        pm.expect(res).to.have.property("count");
+      });

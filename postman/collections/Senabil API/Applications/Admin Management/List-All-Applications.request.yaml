@@ -1,0 +1,47 @@
+$kind: http-request
+name: List All Applications
+order: 1000
+method: GET
+url: '{{baseUrl}}/api/applications'
+queryParams:
+  - key: status
+    value: PENDING
+    description: 'PENDING | APPROVED | REJECTED'
+    disabled: true
+  - key: projectId
+    value: '{{projectId}}'
+    description: 'Filter by project UUID'
+    disabled: true
+  - key: role
+    value: BENEFICIARY
+    description: 'Filter by applicant role: BENEFICIARY | VOLUNTEER'
+    disabled: true
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status: 200 OK", () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("All applications returned with user and project data", () => {
+        const res = pm.response.json();
+        pm.expect(res.success).to.be.true;
+        pm.expect(res.applications).to.be.an("array");
+        pm.expect(res).to.have.property("count");
+      });
+
+      pm.test("Application records have user and project info", () => {
+        const res = pm.response.json();
+        if (res.applications.length > 0) {
+          pm.expect(res.applications[0]).to.have.property("user");
+          pm.expect(res.applications[0]).to.have.property("project");
+        }
+      });
+
+      const res = pm.response.json();
+      const pending = res.applications && res.applications.find(a => a.status === "PENDING");
+      if (pending) {
+        pm.environment.set("applicationId", pending.id);
+        console.log("Pending applicationId saved:", pending.id);
+      }

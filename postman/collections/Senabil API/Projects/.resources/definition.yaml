@@ -1,0 +1,26 @@
+$kind: collection
+name: Projects
+description: |-
+  Project browsing (public/optional auth) and admin management.
+
+  ## Public Routes — no auth required
+  | Method | Route                    | Description                              |
+  |--------|--------------------------|------------------------------------------|
+  | GET    | /api/projects            | List all projects (search + filter)      |
+  | GET    | /api/projects/featured   | Up to 6 featured RUNNING projects        |
+  | GET    | /api/projects/:id        | Single project by UUID or slug           |
+
+  ## Admin Routes — ADMIN role required
+  | Method | Route                         | Description                  |
+  |--------|-------------------------------|------------------------------|
+  | POST   | /api/projects                 | Create a new project         |
+  | PATCH  | /api/projects/:id             | Update project fields        |
+  | DELETE | /api/projects/:id             | Permanently delete project   |
+  | PATCH  | /api/projects/:id/status      | Change RUNNING/PAUSED/COMPLETED |
+  | GET    | /api/projects/:id/analytics   | Project application analytics|
+
+  ## Query Parameters (GET /api/projects)
+  - search: free-text on title and short description
+  - status: RUNNING | PAUSED | COMPLETED
+  - category: FOOD | EDUCATION | CLOTHING | WATER | SHELTER | HEALTH | ORPHAN_SUPPORT | TRAINING | ECONOMIC_SUPPORT
+order: 3000

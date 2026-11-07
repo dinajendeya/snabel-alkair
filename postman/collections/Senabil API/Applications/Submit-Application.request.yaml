@@ -1,0 +1,37 @@
+$kind: http-request
+name: Submit Application
+order: 1000
+method: POST
+url: '{{baseUrl}}/api/applications'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "projectId": "{{projectId}}",
+      "motivation": "I am a displaced family of 5 from northern Gaza. We lost our home in the conflict and are currently sheltering in Rafah. Food assistance would help us sustain basic nutrition for our children.",
+      "notes": "We have 3 children under 10 years old. Priority case."
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status: 201 Created", () => {
+        pm.response.to.have.status(201);
+      });
+
+      pm.test("Application submitted with PENDING status", () => {
+        const res = pm.response.json();
+        pm.expect(res.success).to.be.true;
+        pm.expect(res.application).to.have.property("id");
+        pm.expect(res.application.status).to.equal("PENDING");
+        pm.expect(res.application).to.have.property("projectId");
+      });
+
+      const res = pm.response.json();
+      if (res.application && res.application.id) {
+        pm.environment.set("applicationId", res.application.id);
+        console.log("applicationId saved:", res.application.id);
+      }

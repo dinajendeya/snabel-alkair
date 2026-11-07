@@ -1,0 +1,17 @@
+$kind: collection
+name: Users
+description: |-
+  Authenticated user profile and password management.
+  All endpoints require a valid JWT Bearer token (role: any).
+
+  ## Endpoints
+  | Method | Route                   | Description                        |
+  |--------|-------------------------|------------------------------------|
+  | GET    | /api/users/me           | Get current user profile + counts  |
+  | PATCH  | /api/users/me           | Update profile fields              |
+  | GET    | /api/users/me/applications | All applications by current user |
+  | PATCH  | /api/users/me/password  | Change account password            |
+
+  ## Response: GET /me
+  Returns user object plus _count of applications and unread notifications.
+order: 2000

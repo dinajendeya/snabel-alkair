@@ -1,0 +1,24 @@
+$kind: http-request
+name: Dashboard Projects
+order: 2000
+method: GET
+url: '{{baseUrl}}/api/dashboard/projects'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status: 200 OK", () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Projects with application stats returned", () => {
+        const res = pm.response.json();
+        pm.expect(res.success).to.be.true;
+        pm.expect(res.projects).to.be.an("array");
+        if (res.projects.length > 0) {
+          pm.expect(res.projects[0]).to.have.property("totalApplications");
+          pm.expect(res.projects[0]).to.have.property("pendingApplications");
+          pm.expect(res.projects[0]).to.have.property("beneficiaries");
+          pm.expect(res.projects[0]).to.have.property("volunteers");
+        }
+      });

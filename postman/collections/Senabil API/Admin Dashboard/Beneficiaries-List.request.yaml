@@ -1,0 +1,18 @@
+$kind: http-request
+name: Beneficiaries List
+order: 3000
+method: GET
+url: '{{baseUrl}}/api/dashboard/beneficiaries'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status: 200 OK", () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Beneficiaries list returned", () => {
+        const res = pm.response.json();
+        pm.expect(res.success).to.be.true;
+        pm.expect(res.beneficiaries).to.be.an("array");
+      });

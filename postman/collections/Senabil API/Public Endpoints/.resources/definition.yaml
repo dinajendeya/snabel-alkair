@@ -1,0 +1,16 @@
+$kind: collection
+name: Public Endpoints
+description: |-
+  Publicly accessible endpoints — no authentication required.
+
+  | Method | Route                      | Description                               |
+  |--------|----------------------------|-------------------------------------------|
+  | GET    | /api/public/stats          | Live platform stats (real-time DB counts) |
+  | GET    | /api/public/email-history  | Email dispatch log (dev/debug tool)       |
+
+  ## Live Stats Response
+  totalProjects · totalBeneficiaries · totalVolunteers ·
+  communitiesServed · totalApprovedApplications · totalRunningProjects
+order: 7000
+auth:
+  type: noauth

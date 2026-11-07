@@ -1,0 +1,50 @@
+$kind: http-request
+name: Register
+order: 1000
+method: POST
+url: '{{baseUrl}}/api/auth/register'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "firstName": "Ahmed",
+      "lastName": "Hassan",
+      "email": "ahmed.hassan@example.com",
+      "password": "Password123",
+      "phone": "059-1234567",
+      "role": "BENEFICIARY",
+      "birthDate": "1995-06-15",
+      "governorate": "Gaza",
+      "address": "Al-Rimal, Gaza City",
+      "bio": "Looking for food and shelter assistance."
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status: 201 Created", () => {
+        pm.response.to.have.status(201);
+      });
+
+      pm.test("Registration successful - token received", () => {
+        pm.expect(res.success).to.be.true;
+        pm.expect(res.token).to.be.a("string").and.have.length.above(10);
+      });
+
+      pm.test("User object has required fields", () => {
+        pm.expect(res.user).to.have.all.keys(
+          "id", "email", "firstName", "lastName", "phone", "role", "createdAt"
+        );
+      });
+
+      if (res.success && res.token) {
+        pm.environment.set("token", res.token);
+        pm.environment.set("userId", res.user.id);
+        console.log("Token saved:", res.token.substring(0, 40) + "...");
+        console.log("User ID:", res.user.id, "| Role:", res.user.role);
+      }

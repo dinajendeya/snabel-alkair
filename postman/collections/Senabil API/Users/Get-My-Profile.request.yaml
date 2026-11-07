@@ -1,0 +1,27 @@
+$kind: http-request
+name: Get My Profile
+order: 1000
+method: GET
+url: '{{baseUrl}}/api/users/me'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status: 200 OK", () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("User profile returned with counts", () => {
+        const res = pm.response.json();
+        pm.expect(res.success).to.be.true;
+        pm.expect(res.user).to.have.property("id");
+        pm.expect(res.user).to.have.property("email");
+        pm.expect(res.user).to.have.property("role");
+        pm.expect(res.user).to.have.property("_count");
+        pm.expect(res.user._count).to.have.property("applications");
+      });
+
+      const res = pm.response.json();
+      if (res.user && res.user.id) {
+        pm.environment.set("userId", res.user.id);
+      }

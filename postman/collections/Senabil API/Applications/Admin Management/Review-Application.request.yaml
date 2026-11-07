@@ -1,0 +1,31 @@
+$kind: http-request
+name: Review Application
+order: 2000
+method: PATCH
+url: '{{baseUrl}}/api/applications/:id/review'
+pathVariables:
+  - key: id
+    value: '{{applicationId}}'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "status": "APPROVED",
+      "adminNotes": "Application reviewed and approved. Applicant meets all eligibility criteria. Welcome to the program."
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status: 200 OK", () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Application reviewed and applicant notified", () => {
+        const res = pm.response.json();
+        pm.expect(res.success).to.be.true;
+        pm.expect(res.message).to.include("notified");
+      });

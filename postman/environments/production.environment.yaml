@@ -1,0 +1,47 @@
+﻿name: production
+values:
+  - key: baseUrl
+    value: 'https://your-production-api.com'
+    enabled: true
+  - key: token
+    value: ''
+    enabled: true
+  - key: userId
+    value: ''
+    enabled: true
+  - key: projectId
+    value: ''
+    enabled: true
+  - key: applicationId
+    value: ''
+    enabled: true
+  - key: notificationId
+    value: ''
+    enabled: true
+  - key: adminEmail
+    value: ''
+    enabled: true
+  - key: adminPassword
+    value: ''
+    enabled: true
+  - key: testEmail
+    value: ''
+    enabled: true
+  - key: testPassword
+    value: ''
+    enabled: true
+  - key: jwtSecret
+    value: ''
+    enabled: true
+  - key: jwtExpiresIn
+    value: '7d'
+    enabled: true
+  - key: databaseUrl
+    value: ''
+    enabled: true
+  - key: nodeEnv
+    value: 'production'
+    enabled: true
+  - key: port
+    value: '5000'
+    enabled: true

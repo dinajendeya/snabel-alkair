@@ -1,0 +1,47 @@
+$kind: http-request
+name: Create Project
+order: 1000
+method: POST
+url: '{{baseUrl}}/api/projects'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "title": "Emergency Food Aid – Rafah",
+      "shortDescription": "Distributing monthly food parcels to 500 displaced families in Rafah.",
+      "description": "This project targets displaced families in Rafah governorate who lost their homes and livelihoods. Each household receives a full monthly food parcel covering essential needs for a family of 5.",
+      "objectives": "1. Reach 500 families per month.\n2. Ensure nutritional balance in each parcel.\n3. Prioritize families with children under 5.",
+      "eligibility": "Displaced families with proof of residence in Rafah governorate.",
+      "requirements": "Valid identification document or UNRWA registration card.",
+      "category": "FOOD",
+      "status": "RUNNING",
+      "targetBeneficiaries": 500,
+      "targetVolunteers": 20,
+      "startDate": "2026-01-01",
+      "endDate": "2026-12-31",
+      "imageUrl": "https://example.com/images/food-aid-rafah.jpg"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status: 201 Created", () => {
+        pm.response.to.have.status(201);
+      });
+
+      pm.test("Project created with ID and slug", () => {
+        const res = pm.response.json();
+        pm.expect(res.success).to.be.true;
+        pm.expect(res.project).to.have.property("id");
+        pm.expect(res.project).to.have.property("slug");
+        pm.expect(res.message).to.include("created");
+      });
+
+      const res = pm.response.json();
+      if (res.project && res.project.id) {
+        pm.environment.set("projectId", res.project.id);
+        console.log("New projectId saved:", res.project.id);
+      }

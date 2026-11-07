@@ -1,0 +1,23 @@
+$kind: http-request
+name: Health Check
+order: 100
+method: GET
+url: '{{baseUrl}}/api/health'
+auth:
+  type: noauth
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status: 200 OK — Server is running", () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Health check response is valid", () => {
+        const res = pm.response.json();
+        pm.expect(res.status).to.equal("ok");
+        pm.expect(res.service).to.equal("Senabil Community Impact Platform API");
+        pm.expect(res).to.have.property("timestamp");
+      });
+
+      console.log("Server status:", pm.response.json().status, "| Service:", pm.response.json().service);

@@ -1,0 +1,32 @@
+$kind: http-request
+name: Update Project
+order: 2000
+method: PATCH
+url: '{{baseUrl}}/api/projects/:id'
+pathVariables:
+  - key: id
+    value: '{{projectId}}'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "shortDescription": "Updated: Distributing food parcels to 600 displaced families in Rafah.",
+      "targetBeneficiaries": 600,
+      "targetVolunteers": 25
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status: 200 OK", () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Project updated successfully", () => {
+        const res = pm.response.json();
+        pm.expect(res.success).to.be.true;
+        pm.expect(res.message).to.include("updated");
+      });

@@ -1,0 +1,18 @@
+$kind: http-request
+name: Mark All as Read
+order: 3000
+method: PATCH
+url: '{{baseUrl}}/api/notifications/read-all'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status: 200 OK", () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("All notifications marked as read", () => {
+        const res = pm.response.json();
+        pm.expect(res.success).to.be.true;
+        pm.expect(res.message).to.include("marked as read");
+      });

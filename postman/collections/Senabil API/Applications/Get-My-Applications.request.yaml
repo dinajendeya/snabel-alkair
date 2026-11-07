@@ -1,0 +1,18 @@
+$kind: http-request
+name: Get My Applications
+order: 2000
+method: GET
+url: '{{baseUrl}}/api/applications/me'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status: 200 OK", () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("My applications returned with project details", () => {
+        const res = pm.response.json();
+        pm.expect(res.success).to.be.true;
+        pm.expect(res.applications).to.be.an("array");
+      });

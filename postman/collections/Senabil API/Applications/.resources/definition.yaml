@@ -1,0 +1,27 @@
+$kind: collection
+name: Applications
+description: |-
+  Project application submission and review workflow.
+
+  ## Status Flow
+  PENDING → APPROVED | REJECTED
+
+  Each status change triggers:
+  - In-app notification to the applicant
+  - Email notification to the applicant
+
+  ## User Routes (authenticated — any role)
+  | Method | Route                        | Description                     |
+  |--------|------------------------------|---------------------------------|
+  | POST   | /api/applications            | Submit a new application        |
+  | GET    | /api/applications/me         | My application history          |
+
+  ## Admin Routes (ADMIN role)
+  | Method | Route                              | Description                       |
+  |--------|------------------------------------|-----------------------------------|
+  | GET    | /api/applications                  | All applications (filterable)     |
+  | PATCH  | /api/applications/:id/review       | Approve or reject application     |
+
+  ## Unique Constraint
+  One application per user per project (409 if duplicate).
+order: 4000

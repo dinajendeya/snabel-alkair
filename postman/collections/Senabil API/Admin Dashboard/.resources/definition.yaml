@@ -1,0 +1,24 @@
+$kind: collection
+name: Admin Dashboard
+description: |-
+  Admin-only analytics and management dashboard.
+  All endpoints require ADMIN role.
+
+  ## Endpoints
+  | Method | Route                         | Description                              |
+  |--------|-------------------------------|------------------------------------------|
+  | GET    | /api/dashboard/overview       | Full stats + recent activity + category breakdown |
+  | GET    | /api/dashboard/projects       | All projects with application stats      |
+  | GET    | /api/dashboard/beneficiaries  | All beneficiary users with applications  |
+  | GET    | /api/dashboard/volunteers     | All volunteer users with applications    |
+  | GET    | /api/dashboard/applications   | All applications (same filters as /api/applications) |
+  | GET    | /api/dashboard/audit-logs     | System audit trail (filterable)          |
+
+  ## Overview Response Shape
+  stats: { totalProjects, runningProjects, pausedProjects, completedProjects,
+           totalApplications, pendingApplications, approvedApplications, rejectedApplications,
+           totalBeneficiaries, totalVolunteers }
+  categoryCounts: [{ category, count }]
+  recentAuditLogs: last 8 audit records
+  recentApplications: last 6 applications
+order: 6000

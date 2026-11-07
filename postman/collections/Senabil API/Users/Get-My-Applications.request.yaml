@@ -1,0 +1,24 @@
+$kind: http-request
+name: Get My Applications
+order: 3000
+method: GET
+url: '{{baseUrl}}/api/users/me/applications'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status: 200 OK", () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Applications array returned with project data", () => {
+        const res = pm.response.json();
+        pm.expect(res.success).to.be.true;
+        pm.expect(res.applications).to.be.an("array");
+      });
+
+      const res = pm.response.json();
+      if (res.applications && res.applications.length > 0) {
+        pm.environment.set("applicationId", res.applications[0].id);
+        console.log("applicationId saved:", res.applications[0].id);
+      }

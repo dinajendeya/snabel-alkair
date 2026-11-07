@@ -1,0 +1,30 @@
+$kind: http-request
+name: Update Project Status
+order: 4000
+method: PATCH
+url: '{{baseUrl}}/api/projects/:id/status'
+pathVariables:
+  - key: id
+    value: '{{projectId}}'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "status": "PAUSED"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status: 200 OK", () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Project status updated", () => {
+        const res = pm.response.json();
+        pm.expect(res.success).to.be.true;
+        pm.expect(res.message).to.include("status");
+      });
